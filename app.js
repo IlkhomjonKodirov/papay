@@ -1,6 +1,7 @@
 console.log('Web serverni boshlash');
 const express = require("express");
 const app = express();
+const router = require("./router");
 
 //MongoDB chaqirish
 const db = require("./server").db();// mongoDB instanceni(objectini) olib beradi. Va shu orqali CRUD operatsiyalarini amalga oshiramiz
@@ -18,5 +19,7 @@ app.set("views", "views");
 app.set("view engine", "ejs");
 
 // 4 - bosqich: Routingga bog'liq kodlar
+app.use("/", router);
+
 
 module.exports = app;
