@@ -1,10 +1,10 @@
+const dotenv = require("dotenv");
+dotenv.config();
+
 const http = require('http');
 const mongodb = require('mongodb');
 
-let db;
-const connectionString = "mongodb+srv://Ilkhom:wNwaPSKQ3QxRRRA1@cluster0.t4c9kaq.mongodb.net/Papays";
-
- 
+const connectionString = process.env.MONGO_URL;
 mongodb.connect(connectionString, {
   useNewUrlParser: true, 
   useUnifiedTopology: true
