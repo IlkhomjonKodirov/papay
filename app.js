@@ -3,9 +3,9 @@ const express = require("express");
 const app = express();
 const router = require("./router");
 
-//MongoDB chaqirish
-const db = require("./server").db();// mongoDB instanceni(objectini) olib beradi. Va shu orqali CRUD operatsiyalarini amalga oshiramiz
-const mongodb = require("mongodb");
+// //MongoDB chaqirish
+// const db = require("./server").db();// mongoDB instanceni(objectini) olib beradi. Va shu orqali CRUD operatsiyalarini amalga oshiramiz
+// const mongodb = require("mongodb");
 
 // 1 -bosqich: Kirish kodlari 
 app.use(express.static("public")); 
