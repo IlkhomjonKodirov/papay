@@ -18,8 +18,9 @@ app.use(express.urlencoded({extended: true}));
 app.set("views", "views");
 app.set("view engine", "ejs");
 
-// 4 - bosqich: Routingga bog'liq kodlar
-app.use("/", router);
+// 4 - bosqich: Routingga bog'liq kodlar          
+// app.use("/resto", router_bssr); // ananaviy (faqat admin va restaurant userlar uchun)
+app.use("/", router);           // react (haridorlar uchun)
 
 
 module.exports = app;

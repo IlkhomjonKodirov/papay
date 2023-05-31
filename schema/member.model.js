@@ -1,4 +1,5 @@
 const mongoose = require("mongoose");
+const { member_type_enums, member_status_enums, ordenary_enums } = require("../lib/config");
 
 const memberSchema = new mongoose.Schema({
     mb_nick: {
@@ -80,7 +81,7 @@ const memberSchema = new mongoose.Schema({
       default: 0,
     },
   },
-  {timestamps: true} // createdAt, updatedAt
+  {timestamps: true}
 );
 
 module.exports = mongoose.model("Member", memberSchema); // "Member"- kelajakdagi databasemizdagi tablitsani avtomatik ravishda Members qilib ochib beradi
