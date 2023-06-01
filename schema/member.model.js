@@ -1,11 +1,16 @@
 const mongoose = require("mongoose");
-const { member_type_enums, member_status_enums, ordenary_enums } = require("../lib/config");
+const {
+  member_type_enums,
+  member_status_enums,
+  ordinary_enums,
+} = require("../lib/config");
 
-const memberSchema = new mongoose.Schema({
+const memberSchema = new mongoose.Schema(
+  {
     mb_nick: {
       type: String,
       required: true,
-      index: {unique: true, sparse: true} // avval ishlatilgan nicknameni qayta ishlatib bo'lmaydigan qiladi
+      index: { unique: true, sparse: true },
     },
     mb_phone: {
       type: String,
@@ -13,8 +18,8 @@ const memberSchema = new mongoose.Schema({
     },
     mb_password: {
       type: String,
-      require: true,
-      select: false, // password maxfiy ma'lumot bo'lganligi uchun, buni keyinchalik request qilayotgan paytda bizga database bydefault holatda qaytarmasligi uchun yoziladi
+      required: true,
+      select: false,
     },
     mb_type: {
       type: String,
@@ -22,17 +27,17 @@ const memberSchema = new mongoose.Schema({
       default: "USER",
       enum: {
         values: member_type_enums,
-        message: "{VALUE} is not among permitted values"
-      }
+        message: "{VALUE} is not among permitted values",
+      },
     },
     mb_status: {
       type: String,
-      require: false,
+      required: false,
       default: "ACTIVE",
       enum: {
         values: member_status_enums,
-        message: "{VALUE} is not among permitted values"
-      }
+        message: "{VALUE} is not among permitted values",
+      },
     },
     mb_address: {
       type: String,
@@ -52,13 +57,13 @@ const memberSchema = new mongoose.Schema({
       default: 0,
     },
     mb_top: {
-      type: Number,
+      type: String,
       required: false,
       default: "N",
       enum: {
-        values: ordenary_enums,
-        message: "{VALUE} is not among permitted values"
-      }
+        values: ordinary_enums,
+        message: "{VALUE} is not among permitted values",
+      },
     },
     mb_views: {
       type: Number,
@@ -75,18 +80,18 @@ const memberSchema = new mongoose.Schema({
       required: false,
       default: 0,
     },
-    mb_subcriber_cnt: {
+    mb_subscriber_cnt: {
+      type: Number,
+      required: false,
+      default: 0,
+    },
+    mb_point: {
       type: Number,
       required: false,
       default: 0,
     },
   },
-  {timestamps: true}
+  { timestamps: true } // createdAt, updatedAt
 );
 
-module.exports = mongoose.model("Member", memberSchema); // "Member"- kelajakdagi databasemizdagi tablitsani avtomatik ravishda Members qilib ochib beradi
-
-/*
-Hosil qilingangan memberSchema model orqali Member.js dagi 
-Member modelining ichida database bilan turli hil operatsiyalarni amalga oshiriladi 
-*/
+module.exports = mongoose.model("Member", memberSchema);
