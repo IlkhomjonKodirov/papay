@@ -1,6 +1,12 @@
+// REACT uchun
+
 const express = require("express");
 const router = express.Router();
 const memberController = require('./controllers/memberController')
+
+/*********************************
+ *            REST API           *
+ *********************************/
 
 // memberga dahldor routerlar
 router.post("/signup", memberController.signup);
@@ -16,5 +22,6 @@ router.get("/menu", (req, res) => {
 router.get("/community", (req, res) => {
   res.send("Jamiyat sahifadasiz");
 });
+
 
 module.exports = router;
