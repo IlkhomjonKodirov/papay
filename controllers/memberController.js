@@ -22,6 +22,8 @@ memberController.login = async (req, res) => {
       member = new Member(),
       result = await member.loginData(data);
 
+      // AUTHENTICATE BASED ON JWT
+
     res.json({state: 'succeed', data: result})
   } catch(err){
     console.log(`ERROR, cont/login, ${err.message}`);

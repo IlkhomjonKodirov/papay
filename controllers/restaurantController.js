@@ -2,6 +2,19 @@ const Member = require ("../models/Member");
 
 let restaurantController  = module.exports; 
 
+
+restaurantController.getMyRestaurantData = async (req, res) => {
+  try{
+    console.log("GET: cont/getMyRestaurantData");
+    //TODO: Get my restaurant products
+
+    res.render('restaurant-menu')
+  } catch(err){
+    console.log(`ERROR, cont/getMyRestaurantData, ${err.message}`);
+    res.json({state: 'fail', message: err.message  });
+  }
+}
+
 // backendni ichida ejs orqali frontend qurilayotgani uchun get orqali kerakli pagega borish kerak bo'ladi
 restaurantController.getSignupMyRestaurant = async (req, res) => {
   try{
@@ -20,7 +33,13 @@ restaurantController.signupProcess = async (req, res) => {
       member = new Member(), 
       new_member = await member.signupData(data); 
 
-    res.json({state: "succeed", data: new_member})
+      req.session.member = new_member; // req sessionni ichiga new_memberni save qildik
+      // Keyinchalik shu req sessionni ustanovka qilingandan kn, keyingi zapros qilinganda server kim zapros qilgan ekanligini taniydi.
+      // yuborayotgan req session ichidida member objectining ichidan req qilgan odamning ma'lumotlarini olish imkoniyatiga ega bo'ladi
+
+      // res.redirect - boshqa pagega yuborish
+      res.redirect('/resto/products/menu') // shu pagega yboradi va u yerda new_member datalarini o'qish mumkin
+
   } catch(err){
     console.log(`ERROR, cont/signupProcess, ${err.message}`);
     res.json({state: 'fail', message: err.message  });
@@ -44,7 +63,10 @@ restaurantController.loginProcess = async (req, res) => {
       member = new Member(),
       result = await member.loginData(data);
 
-    res.json({state: "succeed", data: result })
+      req.session.member = result;
+      req.session.save(function() {
+        res.redirect('/resto/products/menu');
+      });
   } catch(err){
     console.log(`ERROR, cont/loginProcess, ${err.message}`);
     res.json({state: 'fail', message: err.message})
@@ -54,6 +76,14 @@ restaurantController.loginProcess = async (req, res) => {
 restaurantController.logout = (req, res) => {
   console.log("GET cont.logout");
   res.send("logout sahifadasiz");
+};
+
+restaurantController.checkSessions = (req, res) => {
+  if(req.session?.member) {
+    res.json({state: 'succeed', data: req.session.member})
+  } else {
+    res.json({state: 'fail', message: 'You are not authentication'})
+  }
 };
 
 

@@ -4,12 +4,12 @@ const app = express();
 const router = require("./router.js");
 const router_bssr = require("./router_bssr.js");
 
-// let session = require("express-session");
-// const MongoDBStore = require("connect-mongodb-session")(session);
-// const store = new MongoDBStore({
-//   uri: process.env.MongoDB_URL,
-//   collection: "sessions",
-// });
+let session = require("express-session");
+const MongoDBStore = require("connect-mongodb-session")(session);
+const store = new MongoDBStore({
+  uri: process.env.MONGO_URL,
+  collection: "sessions", // Mongodb ichida shu nom bn collection ochiladi va uning ichida authenticationlar yoziladi
+});
 
 // 1 -bosqich: Kirish kodlari 
 app.use(express.static("public")); 
@@ -17,18 +17,22 @@ app.use(express.json());
 app.use(express.urlencoded({extended: true})); 
 
 // 2-bosqich: Sessionga bog'liq kodlar
-// app.use(
-//   session({
-//     secret: process.env.SESSION_SECRET,
-//     cookie: {
-//       maxAge: 1000 * 60 * 30, // for 30 minutes
-//     },
-//     store: store,
-//     resave: true,
-//     saveUninitialized: true,
-//   })
-// );
-
+// Bizga keladigan har qanday request cherez seesionlar orqali o'tadi(validation qilinadi)
+app.use(
+  session({
+    secret: process.env.SESSION_SECRET,
+    cookie: {
+      maxAge: 1000 * 60 * 30, // for 30 minutes
+    },
+    store: store,
+    resave: true,
+    saveUninitialized: true,
+  })
+);
+app.use(function(req, res, next) {
+  res.locals.member = req.session.member; // sessionni ichidagi member objectini ma'lumotlarini bizning brauzerga yuborilyapti(res.locals.member)
+  next();
+})
 // 3 - bosqich: viewsga bog'liq kodlar.
 app.set("views", "views");
 app.set("view engine", "ejs");
