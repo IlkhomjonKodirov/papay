@@ -12,9 +12,10 @@ productController.getAllProducts = async (req, res) => {
 productController.addNewProduct = async (req, res) => {
   try {
     console.log("POST: cont/addNewProduct");
-    res.send('ok'); // orqaga javob qaytarish
+    
     //TODO : product creation develop
 
+    res.send('ok'); // orqaga javob qaytarish
   } catch (err) {
     console.log(`ERROR, cont/addNewProduct, ${err.message}`);
   }
