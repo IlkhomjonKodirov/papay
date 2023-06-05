@@ -1,60 +1,58 @@
-const Member = require ("../models/Member");
+const Member = require("../models/Member");
 
-let restaurantController  = module.exports; 
-
+let restaurantController = module.exports;
 
 restaurantController.getMyRestaurantData = async (req, res) => {
-  try{
+  try {
     console.log("GET: cont/getMyRestaurantData");
     //TODO: Get my restaurant products
 
-    res.render('restaurant-menu')
-  } catch(err){
+    res.render("restaurant-menu");
+  } catch (err) {
     console.log(`ERROR, cont/getMyRestaurantData, ${err.message}`);
-    res.json({state: 'fail', message: err.message  });
+    res.json({ state: "fail", message: err.message });
   }
-}
+};
 
 // backendni ichida ejs orqali frontend qurilayotgani uchun get orqali kerakli pagega borish kerak bo'ladi
 restaurantController.getSignupMyRestaurant = async (req, res) => {
-  try{
+  try {
     console.log("GET: cont/getSignupMyRestaurant");
-    res.render('signup'); // res.render() - biror page berish kerak bo'lsa ishlatiladi. signup.ejs page iga yuboradi
-  } catch(err){
+    res.render("signup"); // res.render() - biror page berish kerak bo'lsa ishlatiladi. signup.ejs page iga yuboradi
+  } catch (err) {
     console.log(`ERROR, cont/getSignupMyRestaurant, ${err.message}`);
-    res.json({state: 'fail', message: err.message  });
+    res.json({ state: "fail", message: err.message });
   }
-}
+};
 
 restaurantController.signupProcess = async (req, res) => {
   try {
     console.log("POST: cont/signupProcess");
     const data = req.body,
-      member = new Member(), 
-      new_member = await member.signupData(data); 
+      member = new Member(),
+      new_member = await member.signupData(data);
 
-      req.session.member = new_member; // req sessionni ichiga new_memberni save qildik
-      // Keyinchalik shu req sessionni ustanovka qilingandan kn, keyingi zapros qilinganda server kim zapros qilgan ekanligini taniydi.
-      // yuborayotgan req session ichidida member objectining ichidan req qilgan odamning ma'lumotlarini olish imkoniyatiga ega bo'ladi
+    req.session.member = new_member; // req sessionni ichiga new_memberni save qildik
+    // Keyinchalik shu req sessionni ustanovka qilingandan kn, keyingi zapros qilinganda server kim zapros qilgan ekanligini taniydi.
+    // yuborayotgan req session ichidida member objectining ichidan req qilgan odamning ma'lumotlarini olish imkoniyatiga ega bo'ladi
 
-      // res.redirect - boshqa pagega yuborish
-      res.redirect('/resto/products/menu') // shu pagega yboradi va u yerda new_member datalarini o'qish mumkin
-
-  } catch(err){
+    // res.redirect - boshqa pagega yuborish
+    res.redirect("/resto/products/menu"); // shu pagega yuboradi va u yerda new_member datalarini o'qish mumkin
+  } catch (err) {
     console.log(`ERROR, cont/signupProcess, ${err.message}`);
-    res.json({state: 'fail', message: err.message  });
+    res.json({ state: "fail", message: err.message });
   }
 };
 
 restaurantController.getLoginMyRestaurant = async (req, res) => {
-  try{
+  try {
     console.log("GET: cont/getLoginMyRestaurant");
-    res.render('login-page'); // res.render() - biror page berish kerak bo'lsa ishlatiladi. login-page.ejs page iga yuboradi
-  } catch(err){
+    res.render("login-page"); // res.render() - biror page berish kerak bo'lsa ishlatiladi. login-page.ejs page iga yuboradi
+  } catch (err) {
     console.log(`ERROR, cont/getLoginMyRestaurant, ${err.message}`);
-    res.json({state: "fail", message: err.message });
+    res.json({ state: "fail", message: err.message });
   }
-}
+};
 
 restaurantController.loginProcess = async (req, res) => {
   try {
@@ -63,30 +61,36 @@ restaurantController.loginProcess = async (req, res) => {
       member = new Member(),
       result = await member.loginData(data);
 
-      req.session.member = result;
-      req.session.save(function() {
-        res.redirect('/resto/products/menu');
-      });
-  } catch(err){
+    req.session.member = result;
+    req.session.save(function () {
+      res.redirect("/resto/products/menu");
+    });
+  } catch (err) {
     console.log(`ERROR, cont/loginProcess, ${err.message}`);
-    res.json({state: 'fail', message: err.message})
+    res.json({ state: "fail", message: err.message });
   }
 };
-  
+
 restaurantController.logout = (req, res) => {
   console.log("GET cont.logout");
   res.send("logout sahifadasiz");
 };
 
-restaurantController.checkSessions = (req, res) => {
-  if(req.session?.member) {
-    res.json({state: 'succeed', data: req.session.member})
-  } else {
-    res.json({state: 'fail', message: 'You are not authentication'})
-  }
+restaurantController.validateAuthRestaurant = (req, res, next) => {
+  if (req.session?.member?.mb_type === "RESTAURANT") {
+    req.member = req.session.member; // requestni member qismiga tenglashtirib olyapmiz
+    next(); // -> keyingi qadamga o'tishga ruxsat berish
+  } else
+    res.json({
+      state: "fail",
+      message: "only authenticated members with restaurant type",
+    });
 };
 
-
-
-
-
+restaurantController.checkSessions = (req, res) => {
+  if (req.session?.member) {
+    res.json({ state: "succeed", data: req.session.member });
+  } else {
+    res.json({ state: "fail", message: "You are not authentication" });
+  }
+};
