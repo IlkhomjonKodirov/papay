@@ -20,7 +20,7 @@ app.use(express.urlencoded({extended: true}));
 // Bizga keladigan har qanday request cherez seesionlar orqali o'tadi(validation qilinadi)
 app.use(
   session({
-    secret: process.env.SESSION_SECRET,
+    secret: process.env.SESSION_SECRET, // 
     cookie: {
       maxAge: 1000 * 60 * 30, // for 30 minutes
     },
@@ -29,6 +29,8 @@ app.use(
     saveUninitialized: true,
   })
 );
+
+// har bir kelayotgan request uchun quyidagi mantiq:
 app.use(function(req, res, next) {
   res.locals.member = req.session.member; // sessionni ichidagi member objectini ma'lumotlarini bizning brauzerga yuborilyapti(res.locals.member)
   next();

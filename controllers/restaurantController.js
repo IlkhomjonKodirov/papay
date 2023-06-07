@@ -2,12 +2,12 @@ const Member = require("../models/Member");
 
 let restaurantController = module.exports;
 
-restaurantController.getMyRestaurantData = async (req, res) => {
+restaurantController.getMyRestaurantData = async (req, res) => { // Product malumotlarni databasedan chaqirib olib, restoran-menu ujs pageda kutib oladi
   try {
     console.log("GET: cont/getMyRestaurantData");
     //TODO: Get my restaurant products
 
-    res.render("restaurant-menu");
+    res.render("restaurant-menu"); // restaurant-menu nomli ejs faylga yuboradi
   } catch (err) {
     console.log(`ERROR, cont/getMyRestaurantData, ${err.message}`);
     res.json({ state: "fail", message: err.message });
