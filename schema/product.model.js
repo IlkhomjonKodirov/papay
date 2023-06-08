@@ -23,7 +23,7 @@ const productSchema = new mongoose.Schema(
       required: false,
       default: "PAUSED",
       enum: {
-        values: product_status_enums,
+        values: product_status_enums, // Enum
         message: "{VALUE} is not among permitted enum values",
       },
     },
