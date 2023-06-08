@@ -84,11 +84,11 @@ const productSchema = new mongoose.Schema(
     },
   },
   { timestamps: true }
-); // createdAt, updatedAt (O'zi avtomatik ravishda create va uptade qilib beradi)
+); // createdAt, updatedAt (O'zi avtomatik ravishda create va uptade qilib beradi ), // Databaseni
 
 productSchema.index(
   { restaurant_mb_id: 1, product_name: 1, product_size: 1, product_volume: 1 }, // Texas-De-Brazil, coca-cola, null, 2 (Shu 4 ta ko'rsatgich databaseda bo'lsa, 2-marta kiritilayotganda hatolik beradi)
-  { unique: true }
+  { unique: true } 
 );
 
 module.exports = mongoose.model("Product", productSchema);
