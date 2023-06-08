@@ -16,3 +16,23 @@
   }
 
 console.log(findDigits("ad5we34jkf89"));
+
+
+
+// chellange 6
+// const magazine = "Lorem kill ipsum dolor sit amet, conseacter adipiscing elit, you sed do eiusmod tempor incididunt";
+// const note = "dolor kill you";
+// const result = canMurderwrite(note);
+// console.log("Killer yoza oladimi:", result);
+
+// function canMurderwrite(note) {
+//   let arrMagazine = magazine.split(' ');
+//   let arrNote = note.split(' ');
+//   let findArr = [];
+//   for(let i = 0; i < arrMagazine.length; i++){
+//     if(arrNote.includes(arrMagazine[i])){
+//       findArr.push(arrMagazine[i]);
+//     }
+//   }
+//   return arrNote.length == findArr.length;
+// }
