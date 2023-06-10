@@ -1,5 +1,5 @@
 const assert = require("assert");
-const { shapeIntoMongooseObjectID } = require("../lib/config");
+const { shapeIntoMongooseObjectID: shapeIntoMongooseObjectId } = require("../lib/config");
 const Definer = require("../lib/mistake");
 const ProductModel = require("../schema/product.model");
 
@@ -8,10 +8,23 @@ class Product {
     this.productModel = ProductModel;
   }
 
+  async getAllProductsDataResto(member) {
+    try {
+      member._id = shapeIntoMongooseObjectId(member._id)
+      const result = await this.productModel.find({
+        restaurant_mb_id: member._id
+      });
+      assert.ok(result, Definer.general_err1);
+      return result;
+    }catch(err) {
+      throw err;
+    }
+  }
+
   async addNewProductData(data, member) {
     try {
       // memberId ni MongoDB ObjectId ga aylantiramiz. Chunki member ichidagi Id oddiy string holatida emas MongoDb Object holatida bo'lishi kerak
-      data.restaurant_mb_id = shapeIntoMongooseObjectID(member._id);
+      data.restaurant_mb_id = shapeIntoMongooseObjectId(member._id);
 
       const new_product = new this.productModel(data);
       const result = await new_product.save();
@@ -28,8 +41,8 @@ class Product {
   async updateChosenProductData(id, updated_data, mb_id) {
     try {
       // kirib kelgan id ni check qilib agar mongodbObject bo'lmasa mongodbObjectga aylantirsin
-      id = shapeIntoMongooseObjectID(id);
-      mb_id = shapeIntoMongooseObjectID(mb_id);
+      id = shapeIntoMongooseObjectId(id);
+      mb_id = shapeIntoMongooseObjectId(mb_id);
 
       const result = await this.productModel
         .findOneAndUpdate(

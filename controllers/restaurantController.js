@@ -1,15 +1,18 @@
 const Member = require("../models/Member");
+const Product = require("../models/Product");
 
 let restaurantController = module.exports;
 
-restaurantController.getMyRestaurantData = async (req, res) => { // Product malumotlarni databasedan chaqirib olib, restoran-menu ujs pageda kutib oladi
+restaurantController.getMyRestaurantProducts = async (req, res) => {
+  // Product malumotlarni databasedan chaqirib olib, restoran-menu ujs pageda kutib oladi
   try {
-    console.log("GET: cont/getMyRestaurantData");
+    console.log("GET: cont/getMyRestaurantProducts");
     //TODO: Get my restaurant products
-
-    res.render("restaurant-menu"); // restaurant-menu nomli ejs faylga yuboradi
+    const product = new Product();
+    const data = await product.getAllProductsDataResto(res.locals.member);
+    res.render("restaurant-menu", {restaurant_data: data});
   } catch (err) {
-    console.log(`ERROR, cont/getMyRestaurantData, ${err.message}`);
+    console.log(`ERROR, cont/getMyRestaurantProducts, ${err.message}`);
     res.json({ state: "fail", message: err.message });
   }
 };
