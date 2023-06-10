@@ -20,7 +20,32 @@ class Product {
       return result;
 
       return true;
-    } catch(err) {
+    } catch (err) {
+      throw err;
+    }
+  }
+
+  async updateChosenProductData(id, updated_data, mb_id) {
+    try {
+      // kirib kelgan id ni check qilib agar mongodbObject bo'lmasa mongodbObjectga aylantirsin
+      id = shapeIntoMongooseObjectID(id);
+      mb_id = shapeIntoMongooseObjectID(mb_id);
+
+      const result = await this.productModel
+        .findOneAndUpdate(
+          { _id: id, restaurant_mb_id: mb_id },
+          updated_data,
+          {
+            runValidators: true,
+            lean: true,
+            returnDocument: "after",
+          } // o'zgargan qiymatni ko'rish uchun frontendga yuborsin
+        )
+        .exec();
+
+      assert.ok(result, Definer.general_err1);
+      return result;
+    } catch (err) {
       throw err;
     }
   }
