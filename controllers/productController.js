@@ -24,13 +24,15 @@ productController.addNewProduct = async (req, res) => {
 
     data.product_images = req.files.map((ele) => {
       return ele.path;
-    });
+    }); // req.filesni ichidagi pathni databasega yozish uchun
+    console.log("req.member==========", req.member);
 
     const result = await product.addNewProductData(data, req.member);
     const html = `<script>
                     alert(new dish added successfully);
                     window.location.replace('/resto/products/menu');
                   </script>`;
+    console.log("result============11111", result);
     res.end(html);
   } catch (err) {
     console.log(`ERROR, cont/addNewProduct, ${err.message}`);
@@ -47,6 +49,7 @@ productController.updateChosenProduct = async (req, res) => {
       req.body,
       req.member._id
     ); // id, req.body- nimani o'zgartirish, req.member._id - kim o'zgartirayotgani
+
     await res.json({ state: "success", data: result });
   } catch (err) {
     console.log(`ERROR, cont/updateChosenProduct, ${err.message}`);

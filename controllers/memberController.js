@@ -7,7 +7,6 @@ memberController.signup = async (req, res) => {
     const data = req.body,
       member = new Member(), // serviceModel(Member classi)ning instancesi
       new_member = await member.signupData(data); // signupData ichiga req.bodyni yuboramiz. req.body esa Member.jsdagi inputni o'rniga boradi
-
     res.json({state: 'succeed', data: new_member})
   } catch(err){
     console.log(`ERROR, cont/signup, ${err.message}`);

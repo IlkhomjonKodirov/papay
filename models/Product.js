@@ -1,5 +1,5 @@
 const assert = require("assert");
-const { shapeIntoMongooseObjectID: shapeIntoMongooseObjectId } = require("../lib/config");
+const { shapeIntoMongooseObjectId } = require("../lib/config");
 const Definer = require("../lib/mistake");
 const ProductModel = require("../schema/product.model");
 
@@ -12,8 +12,9 @@ class Product {
     try {
       member._id = shapeIntoMongooseObjectId(member._id)
       const result = await this.productModel.find({
-        restaurant_mb_id: member._id
+        restaurant_mb_id: member._id // restaurant_mb_id  member._id bn bir xil bo'lgan productlarni topib ber degan logic
       });
+
       assert.ok(result, Definer.general_err1);
       return result;
     }catch(err) {
@@ -23,16 +24,13 @@ class Product {
 
   async addNewProductData(data, member) {
     try {
-      // memberId ni MongoDB ObjectId ga aylantiramiz. Chunki member ichidagi Id oddiy string holatida emas MongoDb Object holatida bo'lishi kerak
+      // req.member ichidagi memberId ni MongoDB ObjectId ga aylantiramiz. Chunki member ichidagi Id oddiy string holatida emas MongoDb Object holatida bo'lishi kerak
       data.restaurant_mb_id = shapeIntoMongooseObjectId(member._id);
-
       const new_product = new this.productModel(data);
       const result = await new_product.save();
 
       assert.ok(result, Definer.product_err1);
       return result;
-
-      return true;
     } catch (err) {
       throw err;
     }
