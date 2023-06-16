@@ -1,5 +1,7 @@
+const Definer = require("../lib/mistake");
 const Member = require("../models/Member");
 const Product = require("../models/Product");
+const assert = require("assert");
 
 let restaurantController = module.exports;
 
@@ -41,16 +43,20 @@ restaurantController.getSignupMyRestaurant = async (req, res) => {
 restaurantController.signupProcess = async (req, res) => {
   try {
     console.log("POST: cont/signupProcess");
-    const data = req.body,
-      member = new Member(),
-      new_member = await member.signupData(data);
+    assert(req.file, Definer.general_err3);
 
-    req.session.member = new_member; // req sessionni ichiga new_memberni save qildik
-    // Keyinchalik shu req sessionni ustanovka qilingandan kn, keyingi zapros qilinganda server kim zapros qilgan ekanligini taniydi.
-    // yuborayotgan req session ichidida member objectining ichidan req qilgan odamning ma'lumotlarini olish imkoniyatiga ega bo'ladi
+    // const data = req.body,
+    let new_member = req.body;
+    new_member.mb_type = 'RESTAURANT';
+    new_member.mb_image = req.file.path;
 
-    // res.redirect - boshqa pagega yuborish
-    res.redirect("/resto/products/menu"); // shu pagega yuboradi va u yerda new_member datalarini o'qish mumkin
+    const member = new Member();
+      // new_member = await member.signupData(data);
+    const result = await member.signupData(new_member);
+    assert(result, Definer.general_err1);
+
+    req.session.member = result; 
+    res.redirect("/resto/products/menu"); 
   } catch (err) {
     console.log(`ERROR, cont/signupProcess, ${err.message}`);
     res.json({ state: "fail", message: err.message });
@@ -60,7 +66,7 @@ restaurantController.signupProcess = async (req, res) => {
 restaurantController.getLoginMyRestaurant = async (req, res) => {
   try {
     console.log("GET: cont/getLoginMyRestaurant");
-    res.render("login-page"); // res.render() - biror page berish kerak bo'lsa ishlatiladi. login-page.ejs page iga yuboradi
+    res.render("login-page"); 
   } catch (err) {
     console.log(`ERROR, cont/getLoginMyRestaurant, ${err.message}`);
     res.json({ state: "fail", message: err.message });
@@ -93,8 +99,8 @@ restaurantController.logout = (req, res) => {
 
 restaurantController.validateAuthRestaurant = (req, res, next) => {
   if (req.session?.member?.mb_type === "RESTAURANT") {
-    req.member = req.session.member; // requestni member qismiga tenglashtirib olyapmiz
-    next(); // -> keyingi qadamga o'tishga ruxsat berish
+    req.member = req.session.member; 
+    next(); 
     console.log(req.member);
   } else
     res.json({
