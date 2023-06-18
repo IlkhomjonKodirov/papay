@@ -16,12 +16,11 @@ restaurantController.home = (req, res) => {
 };
 
 restaurantController.getMyRestaurantProducts = async (req, res) => {
-  // Product malumotlarni databasedan chaqirib olib, restoran-menu ejs pageda kutib oladi
+  
   try {
     console.log("GET: cont/getMyRestaurantProducts");
-    //TODO: Get my restaurant products
     const product = new Product();
-    const data = await product.getAllProductsDataResto(res.locals.member); // shu restorantning productlistini olib beradi
+    const data = await product.getAllProductsDataResto(res.locals.member); 
     res.render("restaurant-menu", { restaurant_data: data });
   } catch (err) {
     console.log(`ERROR, cont/getMyRestaurantProducts, ${err.message}`);
@@ -93,8 +92,15 @@ restaurantController.loginProcess = async (req, res) => {
 };
 
 restaurantController.logout = (req, res) => {
-  console.log("GET cont.logout");
-  res.send("logout sahifadasiz");
+  try {
+    console.log("GET cont/logout");
+  req.session.destroy(function(){ // sessionni destroy qiladi yani delete qiladi
+    res.redirect("/resto");
+  });
+  } catch(err) {
+    console.log(`ERROR, cont/logout, ${err.message}`);
+    res.json({ state: "fail", message: err.message });
+  }
 };
 
 restaurantController.validateAuthRestaurant = (req, res, next) => {
