@@ -24,15 +24,14 @@ restaurantController.getMyRestaurantProducts = async (req, res) => {
     res.render("restaurant-menu", { restaurant_data: data });
   } catch (err) {
     console.log(`ERROR, cont/getMyRestaurantProducts, ${err.message}`);
-    res.json({ state: "fail", message: err.message });
+    res.redirect("/resto");
   }
 };
 
-// backendni ichida ejs orqali frontend qurilayotgani uchun get orqali kerakli pagega borish kerak bo'ladi
 restaurantController.getSignupMyRestaurant = async (req, res) => {
   try {
     console.log("GET: cont/getSignupMyRestaurant");
-    res.render("signup"); // res.render() - biror page berish kerak bo'lsa ishlatiladi. signup.ejs page iga yuboradi
+    res.render("signup"); 
   } catch (err) {
     console.log(`ERROR, cont/getSignupMyRestaurant, ${err.message}`);
     res.json({ state: "fail", message: err.message });
@@ -44,7 +43,6 @@ restaurantController.signupProcess = async (req, res) => {
     console.log("POST: cont/signupProcess");
     assert(req.file, Definer.general_err3);
 
-    // const data = req.body,
     let new_member = req.body;
     new_member.mb_type = 'RESTAURANT';
     new_member.mb_image = req.file.path;
