@@ -77,6 +77,19 @@
         }).catch(err => console.log(err));
       })
 
+      // manipulate restaurants status futures
+      $(".mb_status").on("change", function (e){
+            const id= e.target.id;
+            const mb_status=$(`#${id}.mb_status`).val();
+
+            axios.post('/resto/all-restaurant/edit', {id: id, mb_status: mb_status})
+            .then(response => {
+                const result = response.data;
+                console.log(result);
+                if(result.state==="success") alert("Successfully updated!");
+                else alert(result.message);
+            }).catch(err => console.log(err))
+        });
     });
 
   </script>
